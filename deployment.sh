@@ -62,3 +62,4 @@ check_application() {
         echo "Please try to access the application at http://localhost:5000/api/topics"
     fi
 }
+check_application
