@@ -13,28 +13,8 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-#Only one update
-sudo apt update >/dev/null 2>&1
-
-#uninstalling old versions
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
-
-for component in "${components[@]}"; do
-    if dpkg -s docker >/dev/null 2>&1; then
-        echo -e "${green}${bold}$component instalado ☑ ${reset}"
-        echo
-    else
-        echo -e "${red}${bold}$component no instalado ☒ instalación en progreso...${reset}"
-        echo
-        sudo ./docker.sh >/dev/null 2>&1
-        echo -e "${green}${bold}$component instalación completa ☑ ${reset}"
-        echo
-		
-    fi
-done
-
 if [ -d "$REPO/.git" ]; then
-     echo -e "${green}${bold}El repositorio DevOpsTravel ya existe, realizando git pull...${reset}"
+     echo -e "${green}${bold}El repositorio FullStack topics ya existe, realizando git pull...${reset}"
      cd $REPO
      git pull >/dev/null 2>&1
      echo -e "${green}${bold}Pull completado, datos copiados a la carpeta html  Listo ☑ ${reset}"
@@ -43,6 +23,26 @@ else
      git clone https://github.com/franncot/$REPO.git >/dev/null 2>&1
      echo -e "${green}${bold}Repo Clonado -  Listo ☑ ${reset}"
 fi
+
+#Update
+sudo apt update >/dev/null 2>&1
+
+#uninstalling old versions
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done >/dev/null 2>&1
+
+for component in "${components[@]}"; do
+    if dpkg -s docker >/dev/null 2>&1; then
+        echo -e "${green}${bold}$component instalado ☑ ${reset}"
+        echo
+    else
+        echo -e "${red}${bold}$component no instalado ☒ instalación en progreso...${reset}"
+        echo
+        sudo ./$REPO/docker.sh >/dev/null 2>&1
+        echo -e "${green}${bold}$component instalación completa ☑ ${reset}"
+        echo
+		
+    fi
+done
 
 containers=("frontend" "backend" "mongodb" "mongo-express")
 running_containers=$(docker ps -qf "name=(${containers[*]})")
