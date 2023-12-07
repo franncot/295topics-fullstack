@@ -27,12 +27,9 @@ fi
 #Update
 sudo apt update >/dev/null 2>&1
 
-#uninstalling old versions
-for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done >/dev/null 2>&1
-
 #Installing docker newest version
 for component in "${components[@]}"; do
-    if dpkg -s docker >/dev/null 2>&1; then
+    if dpkg -s docker-ce >/dev/null 2>&1; then
         echo -e "${green}${bold}$component instalado ☑ ${reset}"
         echo
     else
@@ -52,14 +49,14 @@ sudo apt install curl >/dev/null 2>&1
 check_application() {
     local response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/topics)
     if [ "$response" -eq 200 ]; then
-        echo "Full stack application started and ready for test."
+        echo -e "${green}${bold}Full stack application started and ready for test - Listo  ☑ ${reset}"
         exit 0
     else
-        echo "Application not started. Starting Docker Compose..."
-        cd  $REPO
+        echo -e "${red}${bold}Application not started. Starting Docker Compose...☒ instalación en progreso...${reset}"
+        cd  $REPO >/dev/null 2>&1docker cont
         docker compose --env-file .env.dev up -d --build
         sleep 5
-        echo "Please try to access the application at http://localhost:5000/api/topics"
+        echo -e "${green}${bold}Please try to access the application at  with curl -i -X http://localhost:5000/api/topics  - Listo  ☑ ${reset}"
     fi
 }
 check_application
