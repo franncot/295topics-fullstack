@@ -45,17 +45,20 @@ for component in "${components[@]}"; do
     fi
 done
 
-containers=("frontend" "backend" "mongodb" "mongo-express")
-running_containers=$(docker ps -qf "name=(${containers[*]})")
+#istal curl for testing
+sudo apt install curl >/dev/null 2>&1
 
-for container in "${containers[@]}"; do
-    if ! echo "$running_containers" | grep -q "$container"; then
-        echo "Container '$container' is not running."
-		cd  $REPO
+# Function to check if the application is running
+check_application() {
+    local response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/topics)
+    if [ "$response" -eq 200 ]; then
+        echo "Full stack application started and ready for test."
+        exit 0
+    else
+        echo "Application not started. Starting Docker Compose..."
+        cd  $REPO
         docker compose --env-file .env.dev up -d --build
         sleep 5
         echo "Please try to access the application at http://localhost:5000/api/topics"
     fi
-done
-
-
+}
