@@ -48,10 +48,13 @@ sudo apt install curl >/dev/null 2>&1
 
 #Discord notification
 send_discord_notification() {
-    local webhook_url="https://discord.com/api/webhooks/1169002249939329156/7MOorDwzym-yBUs3gp0k5q7HyA42M5eYjfjpZgEwmAx1vVVcLgnlSh4TmtqZqCtbupov"
-    local message="Docker Compose completed successfully. Please check the application at http://localhost:5000/api/topics"
+    DISCORD="https://discord.com/api/webhooks/1169002249939329156/7MOorDwzym-yBUs3gp0k5q7HyA42M5eYjfjpZgEwmAx1vVVcLgnlSh4TmtqZqCtbupov"
+    MESSAGE="Docker Compose completed successfully. Please check the application at http://localhost:5000/api/topics"
 
-    curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"$message\"}" "$webhook_url"
+    curl -X POST -H "Content-Type: application/json" \
+         -d '{
+           "content": "'"${MESSAGE}"'"
+         }' "$DISCORD" 
 }
 
 
