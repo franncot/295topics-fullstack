@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   mongo:
-    image: franncot/mongodb-topics:v1
+    image: franncot/mongodb:v2
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -22,7 +22,7 @@ services:
       - 295network
 
   backend:
-    image: franncot/backend-topics:v1
+    image: franncot/backend:v2
     container_name: backend
     environment:
       DATABASE_URL: ${DATABASE_URL}
@@ -37,7 +37,7 @@ services:
       - 295network
 
   frontend:
-    image: franncot/frontend-topics:v1
+    image: franncot/frontend:v2
     container_name: frontend
     environment:
       API_URI: ${API_URI}
