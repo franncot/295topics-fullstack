@@ -49,7 +49,7 @@ sudo apt install curl >/dev/null 2>&1
 #Discord notification
 send_discord_notification() {
     DISCORD="https://discord.com/api/webhooks/1154865920741752872/au1jkQ7v9LgQJ131qFnFqP-WWehD40poZJXRGEYUDErXHLQJ_BBszUFtVj8g3pu9bm7h"
-    MESSAGE="Docker Compose completed successfully. Please check the application at http://localhost:5000/api/topics"
+    MESSAGE="Docker Compose ha sido ejecutado correctamente. Puedes validar en http://localhost:5000/api/topics"
 
     curl -X POST -H "Content-Type: application/json" \
          -d '{
