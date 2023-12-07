@@ -48,7 +48,7 @@ sudo apt install curl >/dev/null 2>&1
 
 #Discord notification
 send_discord_notification() {
-    DISCORD="https://discord.com/api/webhooks/1169002249939329156/7MOorDwzym-yBUs3gp0k5q7HyA42M5eYjfjpZgEwmAx1vVVcLgnlSh4TmtqZqCtbupov"
+    DISCORD="https://discord.com/api/webhooks/1154865920741752872/au1jkQ7v9LgQJ131qFnFqP-WWehD40poZJXRGEYUDErXHLQJ_BBszUFtVj8g3pu9bm7h"
     MESSAGE="Docker Compose completed successfully. Please check the application at http://localhost:5000/api/topics"
 
     curl -X POST -H "Content-Type: application/json" \
@@ -62,17 +62,16 @@ send_discord_notification() {
 check_application() {
     local response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/api/topics)
     if [ "$response" -eq 200 ]; then
-        echo -e "${green}${bold}Full stack application started and ready for test - Listo  ☑ ${reset}"
+        echo -e "${green}${bold}Aplicación 295 Full Stack topics ya esta instalada y lista para su uso - Listo  ☑ ${reset}"
         exit 0
     else
-        echo -e "${red}${bold}Application not started. Starting Docker Compose...☒ instalación en progreso...${reset}"
+        echo -e "${red}${bold}Aplicacion no instalada. Iniciando Docker Compose...☒ Deployment en progreso...${reset}"
         cd  $REPO >/dev/null 2>&1
         docker compose --env-file .env.dev up -d --build
         sleep 5
-        echo -e "${green}${bold}Please try to access the application at  with curl http://localhost:5000/api/topics  - Listo  ☑ ${reset}"
+        echo -e "${green}${bold}Todos los container inicializados puedes probar el ambiente con curl http://localhost:5000/api/topics  - Listo  ☑ ${reset}"
         send_discord_notification
     fi
 }
+
 check_application
-
-
