@@ -17,7 +17,7 @@ if [ -d "$REPO/.git" ]; then
      echo -e "${green}${bold}El repositorio FullStack topics ya existe, realizando git pull...${reset}"
      cd $REPO
      git pull >/dev/null 2>&1
-     echo -e "${green}${bold}Pull completado, datos copiados a la carpeta html  Listo ☑ ${reset}"
+     echo -e "${green}${bold}Pull completado - Listo ☑ ${reset}"
 else
      echo -e "${red}${bold}Clonando el repositorio, por favor espera... ☒ ${reset}"
      git clone https://github.com/franncot/$REPO.git >/dev/null 2>&1
@@ -30,6 +30,7 @@ sudo apt update >/dev/null 2>&1
 #uninstalling old versions
 for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done >/dev/null 2>&1
 
+#Installing docker newest version
 for component in "${components[@]}"; do
     if dpkg -s docker >/dev/null 2>&1; then
         echo -e "${green}${bold}$component instalado ☑ ${reset}"
@@ -52,5 +53,9 @@ for container in "${containers[@]}"; do
         echo "Container '$container' is not running."
 		cd  $REPO
         docker compose --env-file .env.dev up -d --build
+        sleep 5
+        echo "Please try to access the application at http://localhost:5000/api/topics"
     fi
 done
+
+
