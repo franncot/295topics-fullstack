@@ -47,8 +47,6 @@ done
 containers=("frontend" "backend" "mongodb" "mongo-express")
 running_containers=$(docker ps -qf "name=(${containers[*]})")
 
-start_compose=false
-
 for container in "${containers[@]}"; do
     if ! echo "$running_containers" | grep -q "$container"; then
         echo "Container '$container' is not running."
