@@ -53,6 +53,6 @@ for container in "${containers[@]}"; do
     if ! echo "$running_containers" | grep -q "$container"; then
         echo "Container '$container' is not running."
 		cd  $REPO
-        docker-compose --env-file .env.dev up -d --build
+        docker compose --env-file .env.dev up -d --build
     fi
 done
