@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  mongo:
+    image: franncot/mongodb-topics:v1
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+     - 295network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+    depends_on:
+      - mongo
+    networks:
+      - 295network
+
+  backend:
+    image: franncot/backend-topics:v1
+    container_name: backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_NAME: ${DATABASE_NAME}
+      PORT: 5000
+      HOST: ${HOST}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    networks:
+      - 295network
+
+  frontend:
+    image: franncot/frontend-topics:v1
+    container_name: frontend
+    environment:
+      API_URI: ${API_URI}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - 295network
+
+networks:
+  295network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.100.0.0/16 
