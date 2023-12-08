@@ -1,4 +1,4 @@
-name: Deploy to ECR
+name: Buil the docker images and upload them to ECR
 
 on:
   push:
@@ -20,14 +20,14 @@ jobs:
           aws configure set default.region us-east-1
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REPO_URI }}
 
-# Replace with your directories
-      - name: Build and push Docker images - Test1
+# Build and upload them to ECR
+      - name: Build and push Docker images
         run: |
           for DIR in frontend backend db
           do
             cd "$DIR" || exit
-            docker build -t $DIR:$DIR .
-            docker tag $DIR:$DIR ${{ secrets.REPO_URI }}$DIR
+            docker build -t $DIR:latest .
+            docker tag $DIR:latest ${{ secrets.REPO_URI }}$DIR
             docker push ${{ secrets.REPO_URI }}$DIR
             cd -
           done

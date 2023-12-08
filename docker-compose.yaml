@@ -7,7 +7,6 @@ services:
       - "27017:27017"
     networks:
      - 295network
-
   mongo-express:
     image: mongo-express
     container_name: mongo-express
@@ -20,7 +19,6 @@ services:
       - mongo
     networks:
       - 295network
-
   backend:
     image: ${ECR_URI}backend:latest
     container_name: backend
@@ -35,7 +33,6 @@ services:
       - mongo
     networks:
       - 295network
-
   frontend:
     image: ${ECR_URI}frontend:latest
     container_name: frontend
