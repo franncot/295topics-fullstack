@@ -20,14 +20,19 @@ jobs:
           aws configure set default.region us-east-1
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REPO_URI }}
 
+      - name: Generate unique tag
+        id: tag_generator
+        run: echo "::set-output name=TAG::$(date +'%Y%m%d%H%M%S')"
+
+
 # Replace with your directories
       - name: Build and push Docker images
         run: |
-          for dir in frontend backend db
+          for DIR in frontend backend db
           do
-            cd "$dir" || exit
-            docker build -t $dir:latest .
-            docker tag $dir:latest ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
+            cd "$DIR" || exit
+            docker build -t $DIR:$TAG .
+            docker tag $DIR:$TAG ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
             docker push ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
             cd -
           done
