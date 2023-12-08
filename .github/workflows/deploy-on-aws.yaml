@@ -1,36 +1,27 @@
-
-name: Deploy on AWS
+name: Deploy to ECR
 
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
       - name: Login to AWS ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: fullstack295
-        IMAGE_TAG: 1
-
-      - name: Deploy Docker Compose configuration
         run: |
-          docker compose --env-file .env.dev up -d --build
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region us-east-1
+          aws ecr get-login-password --region us-east-1> | docker login --username AWS --password-stdin franncot.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Use Docker Compose with Environment File
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.prod.yml config > merged-compose.yml
+          docker-compose -f merged-compose.yml --env-file .env.dev up -d
+
