@@ -22,6 +22,5 @@ jobs:
 
       - name: Use Docker Compose with Environment File
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.prod.yml config > merged-compose.yml
-          docker-compose -f merged-compose.yml --env-file .env.dev up -d
+          docker-compose -f docker-compose.yaml --env-file .env.dev up -d
 
