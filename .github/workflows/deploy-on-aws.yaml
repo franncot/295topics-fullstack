@@ -22,7 +22,10 @@ jobs:
 
       - name: Generate unique tag
         id: tag_generator
-        run: echo "::set-output name=TAG::$(date +%s)"
+        run: echo "::set-output name=TAG::$(date +'%y%m%d%H%M')"
+
+      - name: Debug - Display generated tag
+        run: echo "Generated tag is ${{ steps.tag_generator.outputs.TAG }}"
 
 
 # Replace with your directories
@@ -31,8 +34,8 @@ jobs:
           for DIR in frontend backend db
           do
             cd "$DIR" || exit
-            docker build -t $DIR:$TAG .
-            docker tag $DIR:$TAG ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
+            docker build -t $DIR:${{ steps.tag_generator.outputs.TAG }} .
+            docker tag $DIR:${{ steps.tag_generator.outputs.TAG }} ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
             docker push ${{ secrets.REPO_URI }}${{ secrets.REPO_NAME }}
             cd -
           done
