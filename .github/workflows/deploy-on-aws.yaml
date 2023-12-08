@@ -20,7 +20,14 @@ jobs:
           aws configure set default.region us-east-1
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REPO_URI }}
 
-      - name: Use Docker Compose with Environment File
+      - name: Build and push Docker images
         run: |
-          docker-compose -f docker-compose.yaml --env-file .env.dev up -d
+          for dir in frontend backend db  # Replace with your directories
+          do
+            cd "$dir" || exit
+            docker build -t $dir:latest .
+            docker tag $dir:latest ${{ REPO_URI }}${{ REPO_NAME }}
+            docker push ${{ REPO_URI }}${{ REPO_NAME }}
+            cd -
+          done
 
