@@ -25,10 +25,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker images
-        run: |
-          docker-compose build
-          docker-compose push
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: fullstack295
+        IMAGE_TAG: 1
 
       - name: Deploy Docker Compose configuration
         run: |
