@@ -20,9 +20,10 @@ jobs:
           aws configure set default.region us-east-1
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REPO_URI }}
 
+# Replace with your directories
       - name: Build and push Docker images
         run: |
-          for dir in frontend backend db  # Replace with your directories
+          for dir in frontend backend db
           do
             cd "$dir" || exit
             docker build -t $dir:latest .
