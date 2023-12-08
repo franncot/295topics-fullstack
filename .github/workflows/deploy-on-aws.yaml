@@ -22,7 +22,7 @@ jobs:
 
       - name: Generate unique tag
         id: tag_generator
-        run: echo "::set-output name=TAG::$(date +'%Y%m%d%H%M%S')"
+        run: echo "::set-output name=TAG::$(date +%s)"
 
 
 # Replace with your directories
