@@ -26,10 +26,7 @@ else
 fi
 
 # remove old unused docker images,networks,volumes,containers
-docker network prune -f
-docker volume prune -f
-docker container prune -f
-docker image prune -f
+docker system prune -af
 
 #Update
 sudo apt update >/dev/null 2>&1
