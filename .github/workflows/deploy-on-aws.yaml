@@ -20,6 +20,10 @@ jobs:
           aws configure set default.region us-east-1
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.REPO_URI }}
 
+#remove unused docker resources
+      - name: Prune unused Docker resources
+        run: docker system prune -af
+
 # Build and upload them to ECR
       - name: Build and push Docker images
         run: |
