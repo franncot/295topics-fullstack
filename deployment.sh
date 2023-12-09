@@ -25,6 +25,12 @@ else
      echo -e "${green}${bold}Repo Clonado -  Listo ☑ ${reset}"
 fi
 
+# remove old unused docker images,networks,volumes,containers
+docker network prune -f
+docker volume prune -f
+docker container prune -f
+docker image prune -f
+
 #Update
 sudo apt update >/dev/null 2>&1
 
